@@ -10,14 +10,14 @@ for x in range(board_size):
     spacesUsed.append(["O"] * board_size)
 
 class Battleship(object):
-    sunk = False
-    row = 0
-    col = 0
-    #holds columns for horizontally placed ships and rows for vertically place ships
+    sunk = False #whether battleship is sunk or not
+    row = 0 #first row of ship
+    col = 0 #first col of ship
+    hit = 0 #keeps track of number of hits as user guesses
     def __init__(self, size, placement):
         self.size = size
         self.placement = placement
-        self.spaces = [] 
+        self.spaces = [] #holds columns for horizontally placed ships and rows for vertically place ships
     
     def location(self, board): #place the ship on the board
         while True:
@@ -56,13 +56,14 @@ class Battleship(object):
                 s = s - 1
                 value = value + 1
                 
-    def print_location(self):
+    def print_location(self): #print method for debugging
         print "(" + str(self.row) + ", " + str(self.col) + ")"
         for x in self.spaces:
             print x
 				
 board = []
 
+    
 
 for x in range(board_size):
     board.append(["O"] * board_size)
@@ -100,12 +101,25 @@ for turn in range(4):
     guess_row = int(raw_input("Guess Row:"))
     guess_col = int(raw_input("Guess Col:"))
     
-    if guess_row == ship1.row and guess_col == ship1.col:
-        ship1.sunk = True
-        print "Congratulations! You sunk my first battleship!"
-    #elif guess_row == ship2.row and guess_col == ship2.col:
-        #ship2.sunk = True
-        #print "Congratulations! You sunk my second battleship!"
+    if guess_row == ship1.row: #since it is known ship1 is horizontally placed
+        for s in ship1.spaces: 
+            if s == guess_col: #checks if the user's guess col is one of the spaces of the ship location
+                print "Congratulations! You hit my first battleship!"
+                ship1.hit += 1
+                break
+        if ship1.hit == ship1.size:     #if num of hits on ship is equal to the size the ship is sunk
+            ship1.sunk = True
+            print "Congratulations! You sunk my first battleship!"
+            
+    elif guess_row == ship2.row: #since it is known ship2 is horizontally placed
+        for s in ship2.spaces:
+            if s == guess_col:
+                print "Congratulations! You hit my second battleship!"
+                ship2.hit += 1
+                break
+        if ship2.hit == ship2.size:
+            ship2.sunk = True
+            print "Congratulations! You sunk my second battleship!"
     else:
         if (guess_row < 0 or guess_row > 9) or (guess_col < 0 or guess_col > 9):
             print "Oops, that's not even in the ocean."
@@ -119,6 +133,6 @@ for turn in range(4):
         else:
     # Print (turn + 1) here!
             print_board(board)
-    if ship1.sunk == True: #and ship2.sunk == True:
+    if ship1.sunk == True and ship2.sunk == True:
         print "You win the game!"
         break
